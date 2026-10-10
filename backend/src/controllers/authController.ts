@@ -2,8 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { emailPattern, isValidRegistration, otpPattern } from '../utils/validation.js'
 import { text } from '../utils/text.js'
 import { clearSession } from '../auth.js'
-import { register, verifyOtp } from '../services/authService.js'
-import { findUserById } from '../repositories/userRepository.js'
+import { findUserById, register, verifyOtp } from '../services/authService.js'
 import type { AuthenticatedRequest } from '../types/api.js'
 
 export async function registerController(request: Request, response: Response, next: NextFunction): Promise<void> {

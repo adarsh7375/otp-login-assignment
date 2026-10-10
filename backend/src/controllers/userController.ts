@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { findUserByEmail, isRegisteredEmail } from '../repositories/userRepository.js'
+import { isRegisteredEmail } from '../services/authService.js'
 import { emailPattern } from '../utils/validation.js'
 import { text } from '../utils/text.js'
 

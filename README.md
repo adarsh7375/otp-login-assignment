@@ -23,8 +23,7 @@ backend/
   src/db.ts           PostgreSQL connection pool
   src/config/         Application constants and environment settings
   src/controllers/    HTTP request and response handlers
-  src/repositories/   Database access functions
-  src/services/       Authentication and checkout business logic
+  src/services/       Business logic and feature-specific database access
   src/utils/          Shared text and validation helpers
   src/routes.ts       API route definitions
   src/server.ts       Express application setup and startup
