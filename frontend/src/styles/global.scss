@@ -49,6 +49,8 @@ h1 { max-width: 34rem; margin-bottom: $space-4; font-family: $serif; font-size: 
 .form-footnote { margin: $space-3 0 0; color: $muted; font-size: 0.8rem; line-height: 1.5; }
 .button { display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; border: 0; border-radius: $radius-sm; padding: 0.85rem 1.15rem; font-weight: 700; transition: transform 160ms, background 160ms; }
 .button:hover { transform: translateY(-1px); }
+.button:disabled { cursor: not-allowed; opacity: 0.55; }
+.button:disabled:hover { transform: none; }
 .button:focus-visible { outline: 3px solid rgba($forest, 0.25); outline-offset: 2px; }
 .button--primary { color: white; background: $forest; }
 .button--primary:hover { background: $forest-dark; }
