@@ -32,6 +32,7 @@ export function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [message, setMessage] = useState('')
+  const isOtpValid = /^\d{6}$/.test(otp)
 
   useEffect(() => {
     const email = values.email.trim()
@@ -175,9 +176,9 @@ export function Checkout() {
           <p className="lede">Enter the six-digit OTP displayed after registration.</p>
           <div className="field">
             <label htmlFor="otp">One-time passcode</label>
-            <input id="otp" className="otp-input" inputMode="numeric" maxLength={OTP_LENGTH} value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))} placeholder="000000" />
+            <input id="otp" className="otp-input" inputMode="numeric" maxLength={OTP_LENGTH} pattern="\d{6}" value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))} placeholder="000000" />
           </div>
-          <Button type="button" fullWidth disabled={isVerifying || otp.length !== OTP_LENGTH} onClick={handleVerifyOtp}>{isVerifying ? 'Verifying...' : 'Verify OTP'}</Button>
+          <Button type="button" fullWidth disabled={isVerifying || !isOtpValid} onClick={handleVerifyOtp}>{isVerifying ? 'Verifying...' : 'Verify OTP'}</Button>
           <Button type="button" variant="secondary" fullWidth onClick={handleSkipOtp}>Skip login</Button>
           {otpError && <p className="error" role="alert">{otpError}</p>}
         </Modal>
