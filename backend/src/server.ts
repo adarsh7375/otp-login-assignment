@@ -11,10 +11,19 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phonePattern = /^[+()\d\s-]{10,20}$/
 const otpLifetimeMinutes = 10
 
+function isAllowedOrigin(origin: string | undefined): boolean {
+  if (!origin) return true
+  const allowedOrigins = [frontendOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173']
+
+  if (allowedOrigins.includes(origin)) return true
+
+  const hostname = new URL(origin).hostname
+  return hostname === 'localhost' || hostname.endsWith('.vercel.app') || hostname.endsWith('.onrender.com')
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = [frontendOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173']
-    callback(null, !origin || allowedOrigins.includes(origin))
+    callback(null, isAllowedOrigin(origin))
   },
   credentials: true,
 }))
