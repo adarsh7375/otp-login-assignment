@@ -1,11 +1,8 @@
 import { createHash, randomBytes, randomInt, timingSafeEqual } from 'node:crypto'
 import type { NextFunction, Request, Response } from 'express'
 import { pool } from './db.js'
-
-const COOKIE_NAME = 'otp_session'
-const sessionTtlHours = Number(process.env.SESSION_TTL_HOURS ?? 24)
-
-export type AuthenticatedRequest = Request & { userId?: number }
+import { SESSION_COOKIE_NAME, SESSION_TTL_HOURS } from './config/constants.js'
+import type { AuthenticatedRequest } from './types/api.js'
 
 export function generateOtp(): string {
   return String(randomInt(100000, 1000000))
@@ -34,25 +31,25 @@ function cookiePolicy(): string {
 export async function createSession(userId: number, response: Response): Promise<void> {
   const token = randomBytes(32).toString('hex')
   const tokenHash = hashValue(token)
-  const expiresAt = new Date(Date.now() + sessionTtlHours * 60 * 60 * 1000)
+  const expiresAt = new Date(Date.now() + SESSION_TTL_HOURS * 60 * 60 * 1000)
 
   await pool.query(
     'INSERT INTO sessions (token_hash, user_id, expires_at) VALUES ($1, $2, $3)',
     [tokenHash, userId, expiresAt],
   )
 
-  response.setHeader('Set-Cookie', `${COOKIE_NAME}=${encodeURIComponent(token)}; HttpOnly${cookiePolicy()}; Path=/; Max-Age=${Math.floor(sessionTtlHours * 60 * 60)}`)
+  response.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=${encodeURIComponent(token)}; HttpOnly${cookiePolicy()}; Path=/; Max-Age=${Math.floor(SESSION_TTL_HOURS * 60 * 60)}`)
 }
 
 export async function clearSession(request: Request, response: Response): Promise<void> {
-  const token = readCookie(request, COOKIE_NAME)
+  const token = readCookie(request, SESSION_COOKIE_NAME)
   if (token) await pool.query('DELETE FROM sessions WHERE token_hash = $1', [hashValue(token)])
-  response.setHeader('Set-Cookie', `${COOKIE_NAME}=; HttpOnly${cookiePolicy()}; Path=/; Max-Age=0`)
+  response.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=; HttpOnly${cookiePolicy()}; Path=/; Max-Age=0`)
 }
 
 export async function requireAuth(request: AuthenticatedRequest, response: Response, next: NextFunction): Promise<void> {
   try {
-    const token = readCookie(request, COOKIE_NAME)
+    const token = readCookie(request, SESSION_COOKIE_NAME)
     if (!token) {
       response.status(401).json({ error: 'Authentication required' })
       return

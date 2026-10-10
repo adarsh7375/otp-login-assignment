@@ -21,7 +21,13 @@ backend/
   schema.sql          PostgreSQL tables and indexes
   src/auth.ts         OTP hashing and session middleware
   src/db.ts           PostgreSQL connection pool
-  src/server.ts       Express API routes and validation
+  src/config/         Application constants and environment settings
+  src/controllers/    HTTP request and response handlers
+  src/repositories/   Database access functions
+  src/services/       Authentication and checkout business logic
+  src/utils/          Shared text and validation helpers
+  src/routes.ts       API route definitions
+  src/server.ts       Express application setup and startup
 frontend/
   src/pages/          Registration and checkout screens
   src/services/api.ts Frontend API client
